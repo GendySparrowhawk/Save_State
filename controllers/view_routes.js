@@ -18,7 +18,7 @@ router.get('/', authenticate, async (req, res) => {
           model: Game,
           attributes: [
             'id',
-            'game_name',
+            'title',
             [literal("substring(description, 1, 100)"), 'description'], // Limit the description field to the first 50 characters
             'thumbnail'
           ]
@@ -26,6 +26,33 @@ router.get('/', authenticate, async (req, res) => {
       ],
       order: [['createdAt', 'DESC']],
       limit: 8
+    });
+      
+    res.render('landing', {
+      errors: req.session.errors,
+      user: req.user,
+      reviews: reviews.map(r => r.get({ plain: true })),
+    });
+
+  });
+
+  router.get('/all', authenticate, async (req, res) => {
+    const reviews = await Review.findAll({
+      include: [
+        {
+          model: User,
+        },
+        {
+          model: Game,
+          attributes: [
+            'id',
+            'title',
+            [literal("substring(description, 1, 100)"), 'description'], // Limit the description field to the first 50 characters
+            'thumbnail'
+          ]
+        }
+      ],
+      order: [['createdAt', 'DESC']],
     });
       
     res.render('landing', {
@@ -84,7 +111,11 @@ router.get('/', authenticate, async (req, res) => {
               'id',
               'game_name',
               'description',
-              'thumbnail'
+              'thumbnail',
+              'publisher',
+              'developer',
+              'rating',
+              'released_date'
             ]
           }
         ],

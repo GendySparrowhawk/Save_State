@@ -33,7 +33,7 @@ Game.init({
         type: DataTypes.STRING,
         allowNull: false
     },
-    release_date: {
+    released_date: {
         type: DataTypes.STRING,
         allowNull: false
     },
